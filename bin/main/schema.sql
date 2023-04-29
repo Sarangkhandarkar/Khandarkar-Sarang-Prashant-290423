@@ -1,5 +1,5 @@
 CREATE TABLE customer (
-	id BIGINT not null,
+	id BIGINT not null auto_increment(5),
 	first_name varchar(100) not null,
 	last_name varchar(100) not null,
 	mobile_number varchar(15) not null

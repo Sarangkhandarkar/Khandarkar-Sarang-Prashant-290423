@@ -11,4 +11,5 @@ public interface CustomerService {
 	List<Customer> getCustomerByFirstname(String firstname);
 	List<Customer> getCustomerByLastname(String lastname);
 	Optional<Customer> getCustomerByMobilenumber(String mobilenumber);
+	Customer saveNewUser (Customer newCustomer);
 }

@@ -42,4 +42,9 @@ public class CustomerServiceImplimentation implements CustomerService {
 		return customerRepo.getByMobileNumber(mobilenumber);
 	}
 
+	@Override
+	public Customer saveNewUser(Customer newCustomer) {
+		return customerRepo.save(newCustomer);
+	}
+
 }
