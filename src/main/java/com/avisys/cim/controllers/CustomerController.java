@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -96,7 +97,7 @@ public class CustomerController {
 		}
 		return existingCustomer.isEmpty()? ResponseEntity.ok(response):new ResponseEntity<>("Unable to create Customer. Mobile number already present.",HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	@DeleteMapping("/deletecustomer/{mobileNumber}")
 	public ResponseEntity<?> deleteCustomerByMobileNumber(@PathVariable String mobileNumber){
 		Optional<MobileNumber> existingMobileNumberObj = Optional.ofNullable((mobileNumberService.GetMobilenumberobject(mobileNumber)));
@@ -108,6 +109,26 @@ public class CustomerController {
 			if(count>0)return ResponseEntity.ok("The user is deleted successfully");
 			return new ResponseEntity<>("Mobile Numbers were not deleted successfully",HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-//		Optional<Customer> customerToDelete = custService.getCustomerById(existingMobileNumberObj.get().getCustomerId());
+		//		Optional<Customer> customerToDelete = custService.getCustomerById(existingMobileNumberObj.get().getCustomerId());
 	}
+
+	@PutMapping("/updatecustomer/{id}")
+	public ResponseEntity<?> updateORDeleteCustomerMobileNumber(@RequestBody CustomerDTO customerdto, @PathVariable Long id){
+		List<MobileNumber> mobileNumberList = customerdto.getMobileNumbers();
+		List<MobileNumber> exitingMobileNumbers = mobileNumberService.getMobileNumberofUser(id);
+		for(MobileNumber existing : exitingMobileNumbers) {
+			if(mobileNumberList.contains(existing)) {
+				int index =mobileNumberList.indexOf(existing);
+				if(!(mobileNumberList.get(index).getNumber().equalsIgnoreCase(existing.getNumber()))) {
+					existing.setNumber(mobileNumberList.get(index).getNumber());
+					mobileNumberList.remove(existing);
+					continue;
+				}else mobileNumberService.delete(existing);
+			}
+		}if(mobileNumberList.isEmpty())return ResponseEntity.ok("All the values of Mobile number are updated successfully");
+		for(MobileNumber item : mobileNumberList) {
+			mobileNumberService.saveMobileNumber(item);
+		}return ResponseEntity.ok("All the values of mobile number are updated and new values are added Successfully");
+	}
+
 }

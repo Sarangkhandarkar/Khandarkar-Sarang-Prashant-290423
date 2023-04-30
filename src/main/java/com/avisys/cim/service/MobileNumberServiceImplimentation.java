@@ -31,6 +31,10 @@ public class MobileNumberServiceImplimentation implements MobileNumberService {
 	public int deleteByCustomerId(Long id) {
 		return MobNoRepo.deleteByCustomerId(id);
 	}
+	@Override
+	public void delete(MobileNumber mobilenumber) {
+		MobNoRepo.delete(mobilenumber);
+	}
 	
 	
 }

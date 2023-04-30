@@ -9,4 +9,5 @@ public interface MobileNumberService {
 	MobileNumber GetMobilenumberobject(String Mobilenumber);
 	MobileNumber saveMobileNumber(MobileNumber newMobileNumber);
 	int deleteByCustomerId(Long id);
+	void delete(MobileNumber mobilenumber);
 }
