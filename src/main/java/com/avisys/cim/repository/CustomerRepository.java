@@ -11,5 +11,5 @@ import com.avisys.cim.Customer;
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 	List<Customer> getByFirstNameContainingIgnoreCase(String firstname);
 	List<Customer> getByLastNameContainingIgnoreCase(String lastname);
-	Optional<Customer> getByMobileNumber(String mobilenumber);
+//	Optional<Customer> getByMobileNumber(String mobilenumber);
 }

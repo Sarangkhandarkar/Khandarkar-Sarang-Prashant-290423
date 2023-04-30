@@ -10,6 +10,6 @@ public interface CustomerService {
 	List<Customer> getAllCustomer();
 	List<Customer> getCustomerByFirstname(String firstname);
 	List<Customer> getCustomerByLastname(String lastname);
-	Optional<Customer> getCustomerByMobilenumber(String mobilenumber);
+	Optional<Customer> getCustomerById(Long id);
 	Customer saveNewUser (Customer newCustomer);
 }

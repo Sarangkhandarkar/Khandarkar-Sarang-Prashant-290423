@@ -37,14 +37,19 @@ public class CustomerServiceImplimentation implements CustomerService {
 		return customerRepo.getByLastNameContainingIgnoreCase(lastname);
 	}
 
-	@Override
-	public Optional<Customer> getCustomerByMobilenumber(String mobilenumber) {
-		return customerRepo.getByMobileNumber(mobilenumber);
-	}
+//	@Override
+//	public Optional<Customer> getCustomerByMobilenumber(String mobilenumber) {
+//		return customerRepo.getByMobileNumber(mobilenumber);
+//	}
 
 	@Override
 	public Customer saveNewUser(Customer newCustomer) {
 		return customerRepo.save(newCustomer);
+	}
+
+	@Override
+	public Optional<Customer> getCustomerById(Long id) {
+		return customerRepo.findById(id);
 	}
 
 }
