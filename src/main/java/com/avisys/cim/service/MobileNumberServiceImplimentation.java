@@ -27,5 +27,10 @@ public class MobileNumberServiceImplimentation implements MobileNumberService {
 	public MobileNumber saveMobileNumber(MobileNumber newMobileNumber) {
 		return MobNoRepo.save(newMobileNumber);
 	}
-
+	@Override
+	public int deleteByCustomerId(Long id) {
+		return MobNoRepo.deleteByCustomerId(id);
+	}
+	
+	
 }

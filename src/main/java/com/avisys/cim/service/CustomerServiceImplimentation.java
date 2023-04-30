@@ -52,4 +52,9 @@ public class CustomerServiceImplimentation implements CustomerService {
 		return customerRepo.findById(id);
 	}
 
+	@Override
+	public void deleteCustomerbyId(Long id) {
+		customerRepo.deleteById(id);
+	}
+
 }

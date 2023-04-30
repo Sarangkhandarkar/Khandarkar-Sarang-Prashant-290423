@@ -8,4 +8,5 @@ public interface MobileNumberService {
 	List<MobileNumber> getMobileNumberofUser(Long customerid);
 	MobileNumber GetMobilenumberobject(String Mobilenumber);
 	MobileNumber saveMobileNumber(MobileNumber newMobileNumber);
+	int deleteByCustomerId(Long id);
 }

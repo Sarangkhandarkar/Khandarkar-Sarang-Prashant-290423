@@ -12,4 +12,5 @@ public interface CustomerService {
 	List<Customer> getCustomerByLastname(String lastname);
 	Optional<Customer> getCustomerById(Long id);
 	Customer saveNewUser (Customer newCustomer);
+	void deleteCustomerbyId(Long id);
 }

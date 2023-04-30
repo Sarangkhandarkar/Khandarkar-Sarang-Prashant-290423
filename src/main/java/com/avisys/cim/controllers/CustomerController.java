@@ -9,6 +9,7 @@ import javax.naming.directory.SearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -94,5 +95,19 @@ public class CustomerController {
 			} response = new CustomerDTO(custService.getCustomerById(customerId).get().getFirstName(), custService.getCustomerById(customerId).get().getLastName(), mobileNumberService.getMobileNumberofUser(customerId));
 		}
 		return existingCustomer.isEmpty()? ResponseEntity.ok(response):new ResponseEntity<>("Unable to create Customer. Mobile number already present.",HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@DeleteMapping("/deletecustomer/{mobileNumber}")
+	public ResponseEntity<?> deleteCustomerByMobileNumber(@PathVariable String mobileNumber){
+		Optional<MobileNumber> existingMobileNumberObj = Optional.ofNullable((mobileNumberService.GetMobilenumberobject(mobileNumber)));
+		if(existingMobileNumberObj.isEmpty()) {
+			return new ResponseEntity<>("Unable to delete customer. Customer does not exist",HttpStatus.INTERNAL_SERVER_ERROR);
+		}else {
+			custService.deleteCustomerbyId(existingMobileNumberObj.get().getCustomerId());
+			int count = mobileNumberService.deleteByCustomerId(existingMobileNumberObj.get().getCustomerId());
+			if(count>0)return ResponseEntity.ok("The user is deleted successfully");
+			return new ResponseEntity<>("Mobile Numbers were not deleted successfully",HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+//		Optional<Customer> customerToDelete = custService.getCustomerById(existingMobileNumberObj.get().getCustomerId());
 	}
 }
