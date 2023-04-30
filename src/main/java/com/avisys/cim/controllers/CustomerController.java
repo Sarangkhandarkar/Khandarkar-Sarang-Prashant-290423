@@ -26,42 +26,42 @@ import com.avisys.cim.service.MobileNumberService;
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
-	
+
 	public CustomerController() {
 		System.out.println("Inside the default constructor of "+ getClass());
 	}
-@Autowired
-public CustomerService custService;
+	@Autowired
+	public CustomerService custService;
 
-@Autowired
-public MobileNumberService mobileNumberService;
+	@Autowired
+	public MobileNumberService mobileNumberService;
 
-public List<CustomerDTO> generateResponseDto (List<Customer> list) {
-	List<CustomerDTO> response = new ArrayList<>();
-	for(Customer customer : list) {
-		List<MobileNumber> mobList = mobileNumberService.getMobileNumberofUser(customer.getId());
-		CustomerDTO customerdto = new CustomerDTO(customer.getFirstName(), customer.getLastName(),mobList);
-		response.add(customerdto);
-	}return response;
-}
+	public List<CustomerDTO> generateResponseDto (List<Customer> list) {
+		List<CustomerDTO> response = new ArrayList<>();
+		for(Customer customer : list) {
+			List<MobileNumber> mobList = mobileNumberService.getMobileNumberofUser(customer.getId());
+			CustomerDTO customerdto = new CustomerDTO(customer.getFirstName(), customer.getLastName(),mobList);
+			response.add(customerdto);
+		}return response;
+	}
 	@GetMapping("/all")
 	public List<CustomerDTO> getAllCustomers(){
 		return generateResponseDto(custService.getAllCustomer());
 	}
-	
+
 	@GetMapping("firstname/{name}")
 	public ResponseEntity<?> getCustomerByFirstName(@PathVariable String name){
 		List<Customer> list = custService.getCustomerByFirstname(name);
-//		List<CustomerDTO> searchResult = ;
+		//		List<CustomerDTO> searchResult = ;
 		return list.isEmpty()? new ResponseEntity<>("No customer found matching "+name,HttpStatus.BAD_REQUEST): ResponseEntity.ok(generateResponseDto(list));
 	}
-	
+
 	@GetMapping("lastname/{lname}")
 	public ResponseEntity<?> getCustomerByLastName(@PathVariable String lname){
 		List<Customer> list = custService.getCustomerByLastname(lname);
 		return list.isEmpty()? new ResponseEntity<>("No Customer found matching "+ lname,HttpStatus.NOT_FOUND):ResponseEntity.ok(generateResponseDto(list));
 	}
-	
+
 	@GetMapping("mobilenumber/{number}")
 	public ResponseEntity<?> getCustomerByMobileNumber(@PathVariable String number){
 		CustomerDTO response = new CustomerDTO();
@@ -72,10 +72,27 @@ public List<CustomerDTO> generateResponseDto (List<Customer> list) {
 		}
 		return cust.isPresent()? ResponseEntity.ok(response):new ResponseEntity<>("There is no customer with this mobile number", HttpStatus.NOT_FOUND);
 	}
-	
-//	@PostMapping("/saveuser")
-//	public ResponseEntity<?> saveNewCustomer(@RequestBody Customer newcustomer){
-//		Optional<Customer> existingCustomer = custService.getCustomerByMobilenumber(newcustomer.getMobileNumber());
-//		return existingCustomer.isEmpty()? ResponseEntity.ok(custService.addCustomer(newcustomer)):new ResponseEntity<>("Unable to create Customer. Mobile number already present.",HttpStatus.INTERNAL_SERVER_ERROR);
-//	}
+
+	@PostMapping("/saveuser")
+	public ResponseEntity<?> saveNewCustomer(@RequestBody CustomerDTO newCustomerDto){
+		CustomerDTO response = null;
+		Long customerId;
+		Optional<Customer> existingCustomer = java.util.Optional.empty();
+		List<String> numbers = new ArrayList<>();
+		List<MobileNumber> mobNumbers = newCustomerDto.getMobileNumbers();
+		if(mobNumbers.isEmpty())return new ResponseEntity<>("Unable to create Customer. Mobile number is a required field.",HttpStatus.INTERNAL_SERVER_ERROR);
+		for(MobileNumber item : mobNumbers) {
+			if(mobileNumberService.GetMobilenumberobject(item.getNumber()) != null)
+				existingCustomer = custService.getCustomerById(mobileNumberService.GetMobilenumberobject(item.getNumber()).getCustomerId());
+			numbers.add(item.getNumber());
+		}if(existingCustomer.isEmpty()) {
+			Customer newcustomer = new Customer(newCustomerDto.getFirstName(), newCustomerDto.getLastName());
+			customerId=custService.saveNewUser(newcustomer).getId();
+			for (String number : numbers) {
+				MobileNumber newmobilenumber = new MobileNumber(number, customerId);
+				mobileNumberService.saveMobileNumber(newmobilenumber);
+			} response = new CustomerDTO(custService.getCustomerById(customerId).get().getFirstName(), custService.getCustomerById(customerId).get().getLastName(), mobileNumberService.getMobileNumberofUser(customerId));
+		}
+		return existingCustomer.isEmpty()? ResponseEntity.ok(response):new ResponseEntity<>("Unable to create Customer. Mobile number already present.",HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }

@@ -7,4 +7,5 @@ import com.avisys.cim.MobileNumber;
 public interface MobileNumberService {
 	List<MobileNumber> getMobileNumberofUser(Long customerid);
 	MobileNumber GetMobilenumberobject(String Mobilenumber);
+	MobileNumber saveMobileNumber(MobileNumber newMobileNumber);
 }

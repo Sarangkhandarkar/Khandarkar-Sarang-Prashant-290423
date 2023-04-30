@@ -4,7 +4,7 @@ CREATE TABLE customer (
 	last_name varchar(100) not null
 );
 CREATE TABLE MOBILE_NUMBER (
-    ID BIGINT auto_increment PRIMARY KEY,
+    ID BIGINT auto_increment(6) unique,
     CUSTOMER_ID BIGINT NOT NULL,
     NUMBER VARCHAR(20) NOT NULL
 );

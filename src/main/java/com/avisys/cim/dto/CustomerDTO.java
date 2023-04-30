@@ -34,5 +34,7 @@ public class CustomerDTO {
 	}
 	public CustomerDTO() {
 		super();
-	}	
+	}
+	
+	
 }

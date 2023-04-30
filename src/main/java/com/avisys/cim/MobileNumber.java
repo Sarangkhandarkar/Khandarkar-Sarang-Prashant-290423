@@ -22,7 +22,17 @@ public class MobileNumber {
     private Long customerId;
     
     
-    public Long getCustomerId() {
+    public MobileNumber() {
+		super();
+	}
+
+	public MobileNumber(String number, Long customerId) {
+		super();
+		this.number = number;
+		this.customerId = customerId;
+	}
+
+	public Long getCustomerId() {
 		return customerId;
 	}
 

@@ -23,5 +23,9 @@ public class MobileNumberServiceImplimentation implements MobileNumberService {
 	public MobileNumber GetMobilenumberobject(String Mobilenumber) {
 		return MobNoRepo.getByNumber(Mobilenumber);
 	}
+	@Override
+	public MobileNumber saveMobileNumber(MobileNumber newMobileNumber) {
+		return MobNoRepo.save(newMobileNumber);
+	}
 
 }
